@@ -73,9 +73,19 @@ function showUsersG(){
     document.getElementById("insUsG").style.display = "block"
     document.getElementById("insUsCarrousel").style.display = "block"
     d3.select('#insUsG').graphviz()
-    .width(500)
-    .height(500)
+    .width(700)
+    .height(250)
     .renderDot(manager.users.grapList())
+}
+function showArtistG(){
+    document.getElementById("insUsG").style.display = "none"
+    document.getElementById("insUsCarrousel").style.display = "none"
+    document.getElementById("verArtistasAdmin").style.display="block"
+    console.log(manager.artists.graphArtist());
+    d3.select('#AinsArtist').graphviz()
+    .width(700)
+    .height(250)
+    .renderDot(manager.artists.graphArtist())
 }
 function salirAdmin(){
     document.getElementById('adminDashboard').style.display = 'none'

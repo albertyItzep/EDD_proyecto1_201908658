@@ -26,6 +26,22 @@ class SongsList{
             this.endNode = newNode
         }
     }
+    getSongsDot(n){
+        let tmp = this.rootNode;
+        let cadena = "";
+        for (let x = 0; x < this.size; x++) {
+            cadena+=`N${n}_${x}[label=\"Name: ${tmp.name},\\n Artist: ${tmp.artist}\",shape = "box"];\n`;
+            tmp = tmp.nextNode
+        }
+        for (let x = 0; x < this.size; x++) {
+            if (x == this.size-1) {
+                cadena+=`\n`
+                break
+            }
+            cadena+=`N${n}_${x} -> N${n}_${x+1};\n`
+        }
+        return cadena;
+    }
     showList(){
         let tmp = this.rootNode
         for (let index = 0; index < this.size; index++) {

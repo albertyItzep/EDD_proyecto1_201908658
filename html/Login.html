@@ -107,7 +107,7 @@
                     </a>
                     <ul class="dropdown-menu">
                       <li><a class="dropdown-item" onclick="showUsersG()">Usuarios</a></li>
-                      <li><a class="dropdown-item" href="#">Artistas</a></li>
+                      <li><a class="dropdown-item" onclick="showArtistG()">Artistas Y Canciones</a></li>
                       <li><a class="dropdown-item" href="#">Podcast</a></li>
                       <li><a class="dropdown-item" href="#">Musica Programada</a></li>
                     </ul>
@@ -122,9 +122,10 @@
         </div>
       </div>
       <div id="verUsuariosAdmin">
-        <div id="insUsG" style="display: none;">
-          <div id="vistaGraphvizUsers" style="display: flex;justify-content: center;">
-
+        <div style="display: flex;justify-content: center;">
+          <div id="vistaGraphvizUsers" class="border border-solid mt-2">
+            <div id="insUsG" style="display: none;">
+            </div>
           </div>
         </div>
         <div id="insUsCarrousel" style="display: none;margin: 5rem;">
@@ -147,12 +148,19 @@
           </table>
         </div>
       </div>
+      <div id="verArtistasAdmin" style="display: none;">
+        <div style="display: flex;justify-content: center;">
+          <div id="AinsArtist">
 
-      <div id="verArtistasAdmin">
-          
+          </div>
+        </div>
+      </div>
       </div>
     </div>
 
+    <div id="userNormalDashboard">
+      
+    </div>
     <!-- Modals de carga Masiva -->
     <div class="modal fade" id="exampleModalUsuarios" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div class="modal-dialog">

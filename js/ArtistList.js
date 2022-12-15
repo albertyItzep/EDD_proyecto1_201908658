@@ -48,7 +48,26 @@ class ArtistsList{
         cadena+="digraph G {\n"
         cadena+="rankdir = LR;\n"
         cadena+="nodoRaiz[label = \"Head\"];\n"
+        for (let x = 0; x < this.size; x++) {
+            cadena+=`A${x}[label=\"Name: ${tmp.name},\\n Country: ${tmp.country}\" shape = "box", style=filled];\n`
+            if (tmp.songsList.size>0) {
+                cadena+= tmp.songsList.getSongsDot(x);
+                cadena+=`A${x} -> N${x}_0;\n`
+            }
+            tmp = tmp.nextNode
+        }
+        for (let x = 0; x < this.size; x++) {
+            if (x == this.size-1) {
+                cadena+=`\n`
+                break
+            }
+            cadena+=`A${x} -> A${x+1};\n`
+        }
+        if (this.size>0) {
+            cadena+=`nodoRaiz -> A0;\n`
+        }
         cadena+="}"
+        return cadena
     }
     bubbleSort(){
         console.log('entro')
@@ -76,9 +95,6 @@ class ArtistsList{
                 tmp = tmp.nextNode
             }
         }
-    }
-    graphList(){
-
     }
     showList(){
         let tmp = this.rootNode
