@@ -73,13 +73,13 @@ class Matrix{
         this.rowList = new Headers()
     }
 
-    isert(mont, day, song, artist){
+    insertar(mont, day, song, artist){
         
         let newCell = new NodoMatriz(mont, day, song, artist);
 
         let columna = this.colList.getHeader(day);
         if (columna == null) {
-            columna = new NodoHeader(dia);
+            columna = new NodoHeader(day);
             this.colList.setNode(columna);
             columna.acces = newCell;
         }else if(mont < columna.acces.mont){
@@ -89,10 +89,11 @@ class Matrix{
         } else {
             let tmp = columna.acces;
             while(tmp.downNode != null){
-                if (mont < tmp.downNode.mont) {
+                if (newCell.mont < tmp.downNode.mont) {
                     newCell.downNode = tmp.downNode;
                     tmp.downNode.upNode = newCell;
                     newCell.upNode = tmp;
+                    tmp.downNode = newCell
                     break;
                 }
                 tmp = tmp.downNode
@@ -108,18 +109,19 @@ class Matrix{
             row = new NodoHeader(mont);
             this.rowList.setNode(row);
             row.acces = newCell;
-        } else if (dia < row.acces.dia) {
+        } else if (day < row.acces.day) {
             newCell.nextNode = row.acces;
             row.acces.previusNode = newCell;
             row.acces = newCell;
         } else {
             let tmp = row.acces;
             while(tmp.nextNode != null){
-                if (dia < tmp.nextNode.dia) {
+                if (day < tmp.nextNode.day) {
                     newCell.nextNode = tmp.nextNode;
                     tmp.nextNode.previusNode = newCell;
                     tmp.nextNode = newCell;
                     newCell.previusNode = tmp;
+                    break
                 }
                 tmp = tmp.nextNode;
             }
@@ -131,5 +133,225 @@ class Matrix{
         }
     }
 
-    
+    grapMatrizG(){
+        let cadena = "";
+        cadena += "digraph G{\n node[shape=box style=filled];\n" + "subgraph cluster_p{\n";
+        cadena += 'label = "Matriz DISPERSA"' + 'edge[dir = "both"];\n';
+
+        cadena += this.nodoX();
+        cadena += this.ColbyR();
+        
+        cadena += this.nodoY();
+        cadena += this.RowsbyR();
+
+        cadena += this.renderNodes();
+        cadena += this.graphRanks();
+
+        cadena += "}}";
+        return cadena.toString()
+
+    }
+    exportRender() {
+        d3.select("#render").graphviz()
+        .width(900)
+        .height(500)
+        .renderDot(this.grapMatrizG())
+    }
+
+    nodoX(){
+        let tmp = ""
+        let aux = this.colList.rootNode
+        tmp += "Mt -> C"
+        tmp += aux.pos;
+        tmp += ";\n"
+
+        while(aux != null){
+            tmp += "C";
+            tmp += aux.pos;
+            tmp += "[group ="
+            tmp += aux.pos;
+            tmp += `, fillcolor=antiquewhite2 label ="${aux.pos}"];\n`;
+
+            if (aux.nextNode != null) {
+                tmp += "C";
+                tmp += aux.pos;
+                tmp += " -> C";
+                tmp += aux.nextNode.pos;
+                tmp += ";\n";
+            }
+            aux = aux.nextNode;
+        }
+
+        aux = this.colList.rootNode;
+        tmp += "{ rank = same; Mt; ";
+
+        while(aux != null){
+            tmp += "C";
+            tmp += aux.pos;
+            tmp += ";";
+
+            aux = aux.nextNode
+        }
+        tmp += "}\n";
+        return tmp.toString()
+    }
+
+    nodoY(){
+        let tmp = "";
+        
+        let aux = this.rowList.rootNode;
+        tmp += "Mt -> F";
+        tmp += aux.pos;
+        tmp += ";\n";
+
+        while (aux != null) {
+            tmp += "F";
+            tmp += aux.pos;
+
+            tmp += `[group=1, fillcolor=antiquewhite2 label="${aux.pos}"];\n`;
+
+            if (aux.nextNode != null) {
+                tmp += "F";
+                tmp += aux.pos;
+                tmp += " -> F";
+                tmp += aux.nextNode.pos;
+                tmp += ";\n";
+            }
+            aux = aux.nextNode;
+        }
+        return tmp.toString();
+    }
+
+    renderNodes(){
+        let tmp = ""
+        let auxc = this.colList.rootNode;
+        while(auxc != null){
+            let aux = auxc.acces;
+            while (aux != null) {
+                tmp += "X";
+                tmp += aux.mont;
+                tmp += "Y";
+                tmp += aux.day;
+                tmp += '[label="';
+                tmp += aux.song+",\\n " +aux.artist+'",';
+                tmp += 'group=';
+                tmp += aux.day;
+                tmp += "];\n";
+
+                aux = aux.downNode;
+            }
+            auxc = auxc.nextNode
+        }
+        console.log(this.colList.rootNode);
+        return tmp.toString()
+    }
+    ColbyR(){
+        let tmp = "";
+        let tmp2 = "";
+        let auxc = this.colList.rootNode;
+
+        while (auxc != null) {
+            if (auxc.acces != null) {
+                tmp += "C";
+                tmp += auxc.pos;
+                tmp += " -> ";
+                tmp += "X";
+                tmp += auxc.acces.mont;
+                tmp += "Y";
+                tmp += auxc.acces.day;
+                tmp += ";\n";
+            }
+            let aux = auxc.acces;
+            while (aux.downNode != null) {
+                if (aux.downNode != null) {
+                    tmp2 += "X";
+                    tmp2 += aux.mont;
+                    tmp2 += "Y";
+                    tmp2 += aux.day;
+                    tmp2 += " -> ";
+                    tmp2 += "X";
+                    tmp2 += aux.downNode.mont;
+                    tmp2 += "Y";
+                    tmp2 += aux.downNode.day;
+                    tmp2 += ";\n";
+                }
+                aux = aux.downNode
+            }
+            auxc = auxc.nextNode
+        }
+        tmp += tmp2
+        return tmp.toString();
+    }
+    RowsbyR(){
+        let tmp = "";
+        let tmp2 = "";
+
+        let auxr = this.rowList.rootNode
+        while (auxr != null) {
+            if (auxr.acces != null) {
+                tmp += "F";
+                tmp += auxr.pos;
+                tmp += " -> ";
+                tmp += "X";
+                tmp += auxr.acces.mont;
+                tmp += "Y";
+                tmp += auxr.acces.day;
+                tmp += ";\n";
+            }
+            let aux = auxr.acces;
+            while (aux != null) {
+                if (aux.nextNode != null) {
+                    tmp2 += "X";
+                    tmp2 += aux.mont;
+                    tmp2 += "Y";
+                    tmp2 += aux.day;
+                    tmp2 += " -> ";
+                    tmp2 += "X";
+                    tmp2 += aux.nextNode.mont;
+                    tmp2 += "Y";
+                    tmp2 += aux.nextNode.day;
+                    tmp2 += ";\n";
+                }
+                aux = aux.nextNode
+            }
+            auxr = auxr.nextNode;
+        }
+        tmp +=tmp2
+        return tmp.toString();
+    }
+    graphRanks(){
+        let tmp = ""
+        let auxr = this.rowList.rootNode
+        while (auxr != null) {
+            tmp += "{ rank = same; F";
+            tmp += auxr.pos;
+            tmp += ";";
+
+            let aux = auxr.acces;
+            while(aux != null){
+                tmp += "X";
+                tmp += aux.mont;
+                tmp += "Y";
+                tmp += aux.day;
+                tmp += ";";
+
+                aux = aux.nextNode;
+            }
+            tmp += "}\n";
+
+            auxr = auxr.nextNode;
+        }
+        return tmp.toString();
+    }
+
 }
+
+const matrizDispersa = new Matrix();
+matrizDispersa.insertar("December",1,"Hola","jovi");
+matrizDispersa.insertar("November",1,"Hola","jovi");
+matrizDispersa.insertar("January",1,"Hola","jovi");
+matrizDispersa.insertar("December",3,"Hola","jovi");
+matrizDispersa.insertar("November",3,"Hola","jovi");
+matrizDispersa.insertar("January",3,"Hola","jovi");
+matrizDispersa.insertar("January",2,"Hola","jovi");
+matrizDispersa.exportRender();
