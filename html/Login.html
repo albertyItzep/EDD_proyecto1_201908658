@@ -97,8 +97,8 @@
                       <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#exampleModalUsuarios">Usuarios</a></li>
                       <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#exampleModalArtistas">Artistas</a></li>
                       <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#exampleModalSongs">Canciones</a></li>
+                      <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#exampleModalProgramed">Musica Programada</a></li>
                       <li><a class="dropdown-item" href="#">Podcast</a></li>
-                      <li><a class="dropdown-item" href="#">Musica Programada</a></li>
                     </ul>
                   </li>
                   <li class="nav-item dropdown">
@@ -109,7 +109,7 @@
                       <li><a class="dropdown-item" onclick="showUsersG()">Usuarios</a></li>
                       <li><a class="dropdown-item" onclick="showArtistG()">Artistas Y Canciones</a></li>
                       <li><a class="dropdown-item" href="#">Podcast</a></li>
-                      <li><a class="dropdown-item" href="#">Musica Programada</a></li>
+                      <li><a class="dropdown-item" onclick="showMatrixG()">Musica Programada</a></li>
                     </ul>
                   </li>
                   <li class="nav-item">
@@ -152,6 +152,12 @@
         <div style="display: flex;justify-content: center;">
           <div id="AinsArtist">
 
+          </div>
+        </div>
+      </div>
+      <div id="verMProgra" style="display: none;">
+        <div style="display: flex;justify-content: center;">
+          <div id="MprograG">
           </div>
         </div>
       </div>
@@ -221,9 +227,31 @@
         </div>
       </div>
     </div>
+
+    <div class="modal fade" id="exampleModalProgramed" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="exampleModalLabel">Cargar Musica Programada</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form>
+              <input type="file" id="CProgramedFile">
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary" onclick="cargaMusicaProgramada()">Cargar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <script src="https://d3js.org/d3.v5.min.js"></script>
     <script src="https://unpkg.com/@hpcc-js/wasm@0.3.11/dist/index.min.js"></script>   
     <script src="https://unpkg.com/d3-graphviz@3.0.5/build/d3-graphviz.js"></script>
+    <script src="../js/MatrizDispersa.js"></script>
     <script src="../js/userslist.js"></script>
     <script src="../js/ArtistList.js"></script>
     <script src="../js/Stack.js"></script>

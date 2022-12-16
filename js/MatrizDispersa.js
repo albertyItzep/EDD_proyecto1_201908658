@@ -95,10 +95,18 @@ class Matrix{
                     newCell.upNode = tmp;
                     tmp.downNode = newCell
                     break;
+                } else if (newCell.mont === tmp.downNode.mont && newCell.day === tmp.downNode.day){
+                    tmp.downNode.song = newCell.song;
+                    tmp.downNode.artist = newCell.artist;
+                    break
                 }
                 tmp = tmp.downNode
             }
-            if (tmp.downNode == null) {
+            if (day == tmp.day && mont == tmp.mont) {
+                console.log("igual")
+                tmp.song = newCell.song;
+                tmp.artist = newCell.artist;
+            }else if (tmp.downNode == null) {
                 tmp.downNode = newCell;
                 newCell.upNode = tmp;
             }
@@ -122,11 +130,14 @@ class Matrix{
                     tmp.nextNode = newCell;
                     newCell.previusNode = tmp;
                     break
+                }else if(newCell.day === tmp.nextNode.day && newCell.mont === tmp.nextNode.mont){
+                    break
                 }
                 tmp = tmp.nextNode;
             }
-
-            if (tmp.nextNode == null) {
+            if (newCell.day === tmp.day && newCell.mont === tmp.mont) {
+                console.log("igual")
+            }else if (tmp.nextNode == null) {
                 tmp.nextNode = newCell
                 newCell.previusNode = tmp;
             }
@@ -136,28 +147,24 @@ class Matrix{
     grapMatrizG(){
         let cadena = "";
         cadena += "digraph G{\n node[shape=box style=filled];\n" + "subgraph cluster_p{\n";
-        cadena += 'label = "Matriz DISPERSA"' + 'edge[dir = "both"];\n';
+        cadena += 'label = "Musica Programada"' + 'edge[dir = "both"];\n';
+
+        cadena += this.renderNodes();        
 
         cadena += this.nodoX();
-        cadena += this.ColbyR();
         
+        cadena += this.ColbyR();
+
         cadena += this.nodoY();
+        
         cadena += this.RowsbyR();
 
-        cadena += this.renderNodes();
         cadena += this.graphRanks();
 
         cadena += "}}";
         return cadena.toString()
 
     }
-    exportRender() {
-        d3.select("#render").graphviz()
-        .width(900)
-        .height(500)
-        .renderDot(this.grapMatrizG())
-    }
-
     nodoX(){
         let tmp = ""
         let aux = this.colList.rootNode
@@ -319,6 +326,13 @@ class Matrix{
         tmp +=tmp2
         return tmp.toString();
     }
+    recorr(){
+        let tmp = this.rowList.rootNode.acces
+        while(tmp != null){
+            console.log(tmp)
+            tmp = tmp.nextNode
+        }
+    }
     graphRanks(){
         let tmp = ""
         let auxr = this.rowList.rootNode
@@ -345,13 +359,3 @@ class Matrix{
     }
 
 }
-
-const matrizDispersa = new Matrix();
-matrizDispersa.insertar("December",1,"Hola","jovi");
-matrizDispersa.insertar("November",1,"Hola","jovi");
-matrizDispersa.insertar("January",1,"Hola","jovi");
-matrizDispersa.insertar("December",3,"Hola","jovi");
-matrizDispersa.insertar("November",3,"Hola","jovi");
-matrizDispersa.insertar("January",3,"Hola","jovi");
-matrizDispersa.insertar("January",2,"Hola","jovi");
-matrizDispersa.exportRender();

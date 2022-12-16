@@ -5,6 +5,7 @@ class Controler{
         this.users = new UsersList();
         this.users.insertUser('2654568452521','Oscar Armin','EDD','+502 (123) 123-4567',true,'123');
         this.artists = new ArtistsList();
+        this.matrix = new Matrix();
         this.friends = new FriendStack();
         this.bloqueds = new BloquedQueue()
     }
@@ -67,6 +68,29 @@ function cargaSongs(){
         });
         alert("Canciones cargadas Exitosamente");
     }
+}
+function cargaMusicaProgramada(){
+    let cargaP = document.getElementById("CProgramedFile");
+    const fileReader = new FileReader();
+    fileReader.readAsText(cargaP.files[0])
+    fileReader.onload = ()=>{
+        let content = JSON.parse(fileReader.result);
+        content.forEach( element =>{
+            manager.matrix.insertar(element.month,element.day,element.song,element.artist);
+        })
+        alert("Musica Programada Cargada Exitosamente");
+    }
+}
+function showMatrixG(){
+    document.getElementById("insUsG").style.display = "none"
+    document.getElementById("insUsCarrousel").style.display = "none"
+    document.getElementById("verArtistasAdmin").style.display="none"
+    document.getElementById("verArtistasAdmin").style.display ="block"
+    //console.log(manager.matrix.grapMatrizG())
+    d3.select('#AinsArtist').graphviz()
+    .width(1000)
+    .height(1000)
+    .renderDot(manager.matrix.grapMatrizG());
 }
 function showUsersG(){
     tableUsers();
