@@ -96,6 +96,15 @@ class ArtistsList{
             }
         }
     }
+    generarHTLMSongs(){
+        let cadena = ""
+        let tmp = this.rootNode;
+        for (let x = 0; x < this.size; x++) {
+            cadena += tmp.songsList.generarHTMLSongs();
+            tmp = tmp.nextNode           
+        }
+        return cadena;
+    }
     showList(){
         let tmp = this.rootNode
         for (let index = 0; index < this.size; index++) {

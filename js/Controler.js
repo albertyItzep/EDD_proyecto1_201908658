@@ -7,7 +7,11 @@ class Controler{
         this.artists = new ArtistsList();
         this.matrix = new Matrix();
         this.friends = new FriendStack();
-        this.bloqueds = new BloquedQueue()
+        this.binaryTree = new ABB()
+        this.bloqueds = new BloquedQueue();
+        this.playList = new PlayList();
+        this.userActual = null
+        this.actualPlaylist = null
     }
 }
 
@@ -24,14 +28,22 @@ function login(){
             if(manager.users.isAdmin(userName)){
                 document.getElementById("loginDiv").style.display="none";
                 document.getElementById("adminDashboard").style.display = "block"
+                manager.userActual = manager.users.getUser(userName);
             }else{
-                alert('this user is normal');
+                document.getElementById("userNormalDashboard").style.display = "block"
+                document.getElementById("loginDiv").style.display="none";
+                manager.userActual = manager.users.getUser(userName);
             }
+        }else{
+            document.getElementById("userNormalDashboard").style.display = "block"
+            document.getElementById("loginDiv").style.display="none";
+            manager.userActual = manager.users.getUser(userName);
         }
     }else{
         alert(validation);
     }
 }
+//carga de datos a plataformas
 function cargaUsuarios(){
     let cargaU = document.getElementById("CusersFile").files[0];
     const fileReader = new FileReader();
@@ -81,6 +93,20 @@ function cargaMusicaProgramada(){
         alert("Musica Programada Cargada Exitosamente");
     }
 }
+function cargaPodcastAdmin(){
+    let cargaPod = document.getElementById("CPodcastFile");
+    const fileReader = new FileReader();
+    fileReader.readAsText(cargaPod.files[0]);
+    fileReader.onload = ()=>{
+        let content = JSON.parse(fileReader.result);
+        content.forEach(element =>{
+            manager.binaryTree.insert(element.name,element.topic,element.guests,element.duration)
+        })
+        alert("Podcast Cargados Correctamente");
+    }
+}
+
+//mostrar graficas en Administrador
 function showMatrixG(){
     document.getElementById("insUsG").style.display = "none"
     document.getElementById("insUsCarrousel").style.display = "none"
@@ -96,6 +122,8 @@ function showUsersG(){
     tableUsers();
     document.getElementById("insUsG").style.display = "block"
     document.getElementById("insUsCarrousel").style.display = "block"
+    document.getElementById("verArtistasAdmin").style.display="none"
+    document.getElementById("PodcastVerAdmin").style.display="none"
     d3.select('#insUsG').graphviz()
     .width(700)
     .height(250)
@@ -105,12 +133,24 @@ function showArtistG(){
     document.getElementById("insUsG").style.display = "none"
     document.getElementById("insUsCarrousel").style.display = "none"
     document.getElementById("verArtistasAdmin").style.display="block"
+    document.getElementById("PodcastVerAdmin").style.display="none"
     console.log(manager.artists.graphArtist());
     d3.select('#AinsArtist').graphviz()
     .width(700)
     .height(250)
     .renderDot(manager.artists.graphArtist())
 }
+function showPodcastG(){
+    document.getElementById("insUsG").style.display = "none"
+    document.getElementById("insUsCarrousel").style.display = "none"
+    document.getElementById("verArtistasAdmin").style.display="none"
+    document.getElementById("PodcastVerAdmin").style.display="block"
+    d3.select('#PodcastG').graphviz()
+    .width(700)
+    .height(500)
+    .renderDot(manager.binaryTree.graphTree());    
+}
+
 function salirAdmin(){
     document.getElementById('adminDashboard').style.display = 'none'
     document.getElementById('loginDiv').style.display = 'block'
@@ -165,4 +205,127 @@ function newRegister() {
         manager.users.showList()
         alert('Success');
     }
+}
+
+// -------------------------------------------------------------- Funciones Usuario Normal --------------------------------------------------------------
+
+function showMatrizNormal(){
+    document.getElementById("homeMusicalNormal").style.display ="none";
+    document.getElementById("musicMatrixNormal").style.display ="block";
+    let divMatriz = document.getElementById("recuadroMatriz");
+    divMatriz.innerHTML = manager.matrix.generarHTML();
+    alert("Mostrando")
+}
+
+function agregarMatrizSong(){
+    let nameSong = document.getElementById("nameSongPublic").value;
+    let artistSong = document.getElementById("artistSongPublic").value;
+    let dateSong = document.getElementById("dateSong").value;
+    dateSong = dateSong.split("-");
+    if (dateSong[1] == 1) {
+        dateSong[1] = "January"
+    } else if (dateSong[1] == 2) {
+        dateSong[1] = "February"
+    } else if (dateSong[1] == 3) {
+        dateSong[1] = "March"
+    } else if (dateSong[1] == 4) {
+        dateSong[1] = "April"
+    } else if (dateSong[1] == 5) {
+        dateSong[1] = "May"
+    } else if (dateSong[1] == 6) {
+        dateSong[1] = "June"
+    } else if (dateSong[1] == 7) {
+        dateSong[1] = "July"
+    } else if (dateSong[1] == 8) {
+        dateSong[1] = "August"
+    } else if (dateSong[1] == 9) {
+        dateSong[1] = "September"
+    } else if (dateSong[1] == 10) {
+        dateSong[1] = "October"
+    } else if (dateSong[1] == 11) {
+        dateSong[1] = "November"
+    } else if (dateSong[1] == 12) {
+        dateSong[1] = "December"
+    }
+    manager.matrix.insertar(dateSong[1],dateSong[2],nameSong,artistSong);
+    showMatrizNormal()
+}
+function agregarNewSongInmediat(){
+    let nameSongInmediat = document.getElementById("nameSongInmediat").value;
+    let durationSongInmediat = document.getElementById("durationSongInmediat").value;
+    let generosSongInmediat = document.getElementById("generosSongInmediat").value;
+    generosSongInmediat = generosSongInmediat.split(",");
+    let ageSongInmediat = document.getElementById("ageSongInmediat").value;
+    let countrySongInmediat = document.getElementById("countrySongInmediat").value;
+
+    manager.artists.addArtist(manager.userActual.username,ageSongInmediat,countrySongInmediat);
+    manager.artists.insertSong(manager.userActual.username,nameSongInmediat,durationSongInmediat,generosSongInmediat);
+    alert("Cancion publicada Correctamente")
+}
+
+function generarHTMLSongsHome(){
+    document.getElementById("homeMusicalNormal").style.display ="block";
+    document.getElementById("musicMatrixNormal").style.display ="none";
+    let inSongsA = document.getElementById("musicHomeNormal");
+    inSongsA.innerHTML = manager.artists.generarHTLMSongs();
+}
+function AgregarPlaylistHome(name,artist){
+    manager.playList.insertNode(name,artist);
+    alert("Cancion Agregada a playlist Correctamete");
+    manager.playList.showPlaylist();
+}
+
+function cargaInicialPlaylist(){
+    document.getElementById("homeMusicalNormal").style.display ="none";
+    document.getElementById("musicMatrixNormal").style.display ="none";
+    document.getElementById("playlistView").style.display = "block";
+    let pInicial = manager.playList.rootNode;
+    manager.actualPlaylist = pInicial;
+    console.log(manager.actualPlaylist)
+    let divInserP = document.getElementById("InsertPlaySong");
+    divInserP.innerHTML=`
+    <p class="card-text">Nombre: ${pInicial.name}</p>
+    <p class="card-text">Artista: ${pInicial.artist}</p>
+    `
+    graphPlayList(manager.actualPlaylist.id)
+}
+function btnRigthPlay(){
+    if (manager.actualPlaylist == null) return
+    if (manager.actualPlaylist.nextNode != null) {
+        manager.actualPlaylist = manager.actualPlaylist.nextNode;
+        let divInserP = document.getElementById("InsertPlaySong");
+        divInserP.innerHTML=`
+        <p class="card-text">Nombre: ${manager.actualPlaylist.name}</p>
+        <p class="card-text">Artista: ${manager.actualPlaylist.artist}</p>
+    `
+    } else {
+        let divInserP = document.getElementById("InsertPlaySong");
+        divInserP.innerHTML=`
+        Sin mas musica por reproducir
+        `   
+    }
+    graphPlayList(manager.actualPlaylist.id)
+}
+function btnLeftPlay(){
+    if (manager.actualPlaylist == null) return
+    if (manager.actualPlaylist.previusNode != null) {
+        manager.actualPlaylist = manager.actualPlaylist.previusNode;
+        let divInserP = document.getElementById("InsertPlaySong");
+        divInserP.innerHTML=`
+        <p class="card-text">Nombre: ${manager.actualPlaylist.name}</p>
+        <p class="card-text">Artista: ${manager.actualPlaylist.artist}</p>
+    `
+    } else {
+        let divInserP = document.getElementById("InsertPlaySong");
+        divInserP.innerHTML=`
+        Sin mas musica por reproducir
+        `   
+    }
+    graphPlayList(manager.actualPlaylist.id)
+}
+function graphPlayList(id){
+    d3.select('#divGrapPlaylist').graphviz()
+    .width(700)
+    .height(500)
+    .renderDot(manager.playList.generateGraphviz(id)); 
 }

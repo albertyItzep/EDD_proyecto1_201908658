@@ -16,7 +16,6 @@ class NodoHeader{
     constructor(pos){
         this.nextNode = null
         this.previusNode = null
-
         this.acces = null
 
         this.pos=pos
@@ -26,6 +25,7 @@ class NodoHeader{
 class Headers{
     constructor(){
         this.rootNode = null
+        this.endNode = null
         this.size = 0
     }
     isEmpty(){
@@ -41,8 +41,8 @@ class Headers{
     }
     setNode(node){
         if (this.isEmpty()) {
-            this.rootNode = node
             this.size++
+            this.rootNode = node
         }else if(node.pos < this.rootNode.pos){
             node.nextNode = this.rootNode
             this.rootNode.previusNode = node
@@ -65,12 +65,25 @@ class Headers{
             }
         }
     }
+    insertMont(mont){
+        this.size++
+        let newNodo = new NodoHeader(mont)
+        if (this.rootNode == null) {
+            this.rootNode = newNodo
+            this.endNode = newNodo
+        }else{
+            this.endNode.nextNode = newNodo
+            newNodo.previusNode = this.endNode
+            this.endNode = newNodo
+        }
+    }
 }
 
 class Matrix{
     constructor(){
         this.colList = new Headers()
         this.rowList = new Headers()
+
     }
 
     insertar(mont, day, song, artist){
@@ -358,4 +371,27 @@ class Matrix{
         return tmp.toString();
     }
 
+    generarHTML(){
+        let cadena = ""
+        let tmp = this.rowList.rootNode;
+        while(tmp != null){
+            let tmp2 = tmp.acces;
+            while (tmp2 != null) {
+                cadena +=`
+                    <div class="col">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h5 class="card-title">Nombre: ${tmp2.song}</h5>
+                                <p class="card-text">Artist: ${tmp2.artist}</p>
+                                <p class="card-text">Dia: ${tmp2.day}, Mes: ${tmp2.mont}</p>
+                            </div>
+                            
+                        </div>
+                    </div>\n`
+                tmp2 = tmp2.nextNode;
+            }
+            tmp = tmp.nextNode;
+        }
+        return cadena;
+    }
 }
