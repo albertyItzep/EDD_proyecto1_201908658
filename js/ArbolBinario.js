@@ -42,6 +42,31 @@ class ABB{
             this.inOrden(Nodo.rigth);
         }
     }
+    generateHTMl(){
+        let cadena = ""
+        cadena += this.HTML(this.rooNode)
+        console.log(cadena)
+        return cadena
+    }
+    HTML(Nodo){
+        if (Nodo == null) return "";
+        let cadena = ""
+        cadena += this.HTML(Nodo.left);
+        cadena += this.HTML(Nodo.rigth);
+
+        cadena += `
+        <div class="card" id="mensajes1" style="width: 18rem; margin: 1rem;">
+            <div class="card-body">
+                <h5 class="card-title">Podcast</h5>
+                <p class="card-text">Nombre: ${Nodo.name}</p>
+                <p class="card-text">Tema: ${Nodo.topic}</p>
+                <p class="card-text">Invitados: ${Nodo.guests}</p>
+                <p class="card-text">Duracion: ${Nodo.duration}</p>
+            </div>
+        </div> 
+        `
+        return cadena
+    }
     graphTree(){
         let cadena = "digraph G { \n rankdir=TB;\n node [shape = record, style=filled];\n"
         cadena+= this.exploreGraph(this.rooNode,0,0);

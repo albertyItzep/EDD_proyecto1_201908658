@@ -197,16 +197,19 @@
                       <a class="nav-link active" aria-current="page" href="#" onclick="cargaInicialPlaylist()">PlayList</a>
                     </li>
                     <li class="nav-item">
-                      <a class="nav-link active" aria-current="page" href="#">Artistas</a>
+                      <a class="nav-link active" aria-current="page" href="#" onclick="cargaInicialArtistas()">Artistas</a>
                     </li>
                     <li class="nav-item">
-                      <a class="nav-link active" aria-current="page" href="#">Podcast</a>
+                      <a class="nav-link active" aria-current="page" href="#" onclick="cargarPodcastIni()">Podcast</a>
                     </li>
                     <li class="nav-item">
-                      <a class="nav-link active" aria-current="page" href="#">Amigos</a>
+                      <a class="nav-link active" aria-current="page" href="#" onclick="friendsCarga()">Amigos</a>
                     </li>
                     <li class="nav-item">
-                      <a class="nav-link active" aria-current="page" href="#">Bloqueados</a>
+                      <a class="nav-link active" aria-current="page" href="#" onclick="inicialBloqued()">Bloqueados</a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link active" aria-current="page" href="#" onclick="salirNormal()">Salir</a>
                     </li>
                   </ul>
                 </div>
@@ -1465,7 +1468,175 @@
           </div>
         </div>
       </div>
-    </div>
+      </div>
+
+      <style type="text/css">
+        #global1 {
+          height: 18rem;
+          width: 75rem;
+          border: 1px solid #ddd;
+          background: #f1f1f1;
+          overflow-x: auto;
+        }
+        #global2 {
+          height: 15rem;
+          width: 75rem;
+          border: 1px solid #ddd;
+          background: #f1f1f1;
+          overflow-x: auto;
+        }
+        #mensajes1 {
+          min-width:18rem ;
+          display: flex;
+          margin: 1rem;
+          flex-direction: row;
+        }
+        #mensajes2 {
+          min-width:18rem ;
+          display: flex;
+          margin: 1rem;
+          flex-direction: row;
+        }
+        #global3 {
+          height: 15rem;
+          width: 75rem;
+          border: 1px solid #ddd;
+          background: #f1f1f1;
+          overflow-x: auto;
+        }
+        #mensajes3 {
+          min-width:18rem ;
+          display: flex;
+          margin: 1rem;
+          flex-direction: row;
+        }
+        #global4 {
+          height: 20rem;
+          width: 75rem;
+          border: 1px solid #ddd;
+          background: #f1f1f1;
+          overflow-x: auto;
+        }
+        #mensajes4 {
+          min-width:18rem ;
+          display: flex;
+          margin: 1rem;
+          flex-direction: row;
+        }
+        </style>
+      <div id="friendsNormal" style="display: none;">
+        <div style="display: flex; justify-content: center;margin: 2rem;">
+          <div id="InserListUser">
+            <h4 class="text-center">Usuarios</h4>
+            <div id="global1">
+              <div id="mensajes1">
+              </div>
+            </div>
+          </div>
+        </div>
+        <div id="InFriends">
+          <div style="display: flex; justify-content: center;margin: 2rem;">
+            <div id="global2" class="mt-2">
+              <div id="mensajes2">
+              </div>
+            </div>
+          </div>
+          <button class="btn btn-dark" style="margin-left: 4rem;" onclick="deleteFriend()">Eliminar Amigo</button>
+        </div>
+        <div style="display: flex; justify-content: center;margin: 2rem;">
+          <div id="graphFriend"  class="border">
+          </div>
+        </div>
+      </div>
+
+      <div id="bloquedUsers" style="display:none;">
+        <div style="display: flex; justify-content: center;margin: 2rem;">
+          <div id="global3" class="mt-2">
+            <div id="mensajes3">
+            </div>
+          </div>
+        </div>
+        <button class="btn btn-dark" style="margin-left: 4rem;" onclick="deletBloquedUs()">Desbloquear</button>
+        <div style="display: flex; justify-content: center;margin: 2rem;">
+          <div id="graphBloqueds"  class="border">
+          </div>
+        </div>
+      </div>
+
+      <div id="podcastView" style = "display: none;">
+        <div class="row row-cols-1 row-cols-md-2 g-4" style="margin:2rem">
+          <div class="col">
+            <div class="card">
+              <div class="card-body">
+                <h5 class="card-title text-center">Publicar Podcast</h5>
+                <form>
+                  <div class="mb-3">
+                    <label for="NamePodP" class="form-label">Nombre</label>
+                    <input type="email" class="form-control" id="NamePodP" aria-describedby="emailHelp">
+                  </div>
+                  <div class="mb-3">
+                    <label for="temaPodP" class="form-label">Tema</label>
+                    <input type="text" class="form-control" id="temaPodP">
+                  </div>
+                  <div class="mb-3">
+                    <label for="InvitadosPodP" class="form-label">Invitados</label>
+                    <input type="text" class="form-control" id="InvitadosPodP">
+                  </div>
+                  <div class="mb-3">
+                    <label for="duracionPodP" class="form-label">Duracion</label>
+                    <input type="text" class="form-control" id="duracionPodP">
+                  </div>
+                  <button type="button" class="btn btn-primary" onclick="publicaPodP()">Publicar</button>
+                </form>
+              </div>
+            </div>
+          </div>
+          <div class="col">
+            <div class="card">
+              <div class="card-body">
+                <h5 class="card-title text-center">Card title</h5>
+                <div style="display: flex; justify-content: center;margin: 2rem;">
+                  <div id="global4" class="mt-2">
+                    <div id="mensajes4">
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col">
+            <div class="card-body" id="grapTreeG">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="artistListI" style="display: none;">
+        <div style="display: flex;justify-content:center;">
+          <div class="row row-cols-1 row-cols-md-2 g-4">
+            <div class="col">
+              <div class="table-responsive">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th scope="col text-center">Artista</th>
+                      <th scope="col text-center">Canciones</th>
+                    </tr>
+                  </thead>
+                  <tbody id="tableArtist">
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div class="col">
+              <div style="display: flex;justify-content:center;align-content: center;">
+                <div id="normalGArtist">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- Modals de carga Masiva -->
@@ -1574,6 +1745,7 @@
     <script src="../js/userslist.js"></script>
     <script src="../js/ArtistList.js"></script>
     <script src="../js/PlaylistList.js"></script>
+    <script src="../js/sha256.js"></script>
     <script src="../js/Stack.js"></script>
     <script src="../js/Queue.js"></script>
     <script src="../js/songsList.js"></script>

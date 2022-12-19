@@ -19,8 +19,10 @@ class UsersList{
         this.size = null
     }
     insertUser(dpi,name,username,phone,admin,password){
+        let passEncri = Sha256.hash(password)
         let newNode = new UserNodo({dpi,name,username,phone,admin})
-        newNode.addPassword('')
+        newNode.addPassword(passEncri)
+        console.log(passEncri)
         this.size++
         if(this.rootNode === null){
             this.rootNode = newNode
@@ -50,10 +52,11 @@ class UsersList{
         }
     }
     confirmUser(userName,password){
+        let passEncri = Sha256.hash(password)
         let tmp = this.rootNode
         for (let x = 0; x < this.size; x++) {
             if (tmp.username === userName) {
-                if (tmp.password === password) {
+                if (tmp.password === passEncri) {
                     return 'success'
                 }
                 return 'Incorrect Password'
@@ -115,6 +118,26 @@ class UsersList{
         }
         cadena+="}"
         return cadena;
+    }
+    returnHTMLBTN(){
+        let tmp = this.rootNode
+        let cadena = ""
+
+        for (let x = 0; x < this.size; x++) {
+            cadena += `
+            <div class="card" id="mensajes1" style="width: 18rem; margin: 1rem;">
+                <div class="card-body">
+                <h5 class="card-title">Usuario</h5>
+                <p class="card-text">User Name: ${tmp.username}</p>
+                <p class="card-text">Full Name: ${tmp.name}</p>
+                <button class="btn btn-primary" onclick="addFriend('${tmp.username}','${tmp.dpi}')">Agregar Amigo</button>
+                <button class="btn btn-danger" onclick="addBloqued('${tmp.username}','${tmp.dpi}')">Bloquear</button>
+                </div>
+            </div>           
+            `
+            tmp = tmp.nextNode
+        }
+        return cadena
     }
     showList(){
         let tmp = this.rootNode

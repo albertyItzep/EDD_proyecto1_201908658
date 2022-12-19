@@ -47,7 +47,7 @@ class SongsList{
         let tmp = this.rootNode
         for (let x = 0; x < this.size; x++) {
             cadena+= `
-            <div class="col" id="${tmp.name}|">
+            <div class="col">
                 <div class="card h-100">
                     <div class="card-body">
                         <h5 class="card-title">Nombre: ${tmp.name}</h5>
@@ -61,6 +61,32 @@ class SongsList{
             </div>`
             tmp = tmp.nextNode
         }
+        return cadena;
+    }
+    getSongHTML(){
+        let cadena = ""
+        let tmp = this.rootNode;
+        cadena += `
+            <div id="global3" class="mt-2">
+                <div id="mensajes3">
+        `
+        for (let x = 0;x < this.size; x++) {
+            cadena +=`
+            <div class="card" id="mensajes1" style="width: 18rem; margin: 1rem;">
+                <div class="card-body">
+                    <h5 class="card-title">Cancion</h5>
+                    <h5 class="card-title">Nombre: ${tmp.name}</h5>
+                    <p class="card-text">Artista: ${tmp.artist}</p>
+                    <p class="card-text">Duracion: ${tmp.duration}, Gneros: ${tmp.gender}</p>
+                </div>
+            </div> `
+            tmp = tmp.nextNode
+        }
+        cadena += `
+                </div>
+            </div>
+        `
+        console.log(cadena)
         return cadena;
     }
     showList(){

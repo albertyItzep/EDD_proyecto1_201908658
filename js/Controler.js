@@ -212,9 +212,13 @@ function newRegister() {
 function showMatrizNormal(){
     document.getElementById("homeMusicalNormal").style.display ="none";
     document.getElementById("musicMatrixNormal").style.display ="block";
+    document.getElementById("playlistView").style.display = "none";
+    document.getElementById("bloquedUsers").style.display = "none";
+    document.getElementById("podcastView").style.display = "none"
+    document.getElementById("artistListI").style.display = "none"
+    document.getElementById("friendsNormal").style.display = "none";
     let divMatriz = document.getElementById("recuadroMatriz");
     divMatriz.innerHTML = manager.matrix.generarHTML();
-    alert("Mostrando")
 }
 
 function agregarMatrizSong(){
@@ -266,6 +270,11 @@ function agregarNewSongInmediat(){
 function generarHTMLSongsHome(){
     document.getElementById("homeMusicalNormal").style.display ="block";
     document.getElementById("musicMatrixNormal").style.display ="none";
+    document.getElementById("playlistView").style.display = "none";
+    document.getElementById("bloquedUsers").style.display = "none";
+    document.getElementById("friendsNormal").style.display = "none";
+    document.getElementById("artistListI").style.display = "none"
+    document.getElementById("podcastView").style.display = "none"
     let inSongsA = document.getElementById("musicHomeNormal");
     inSongsA.innerHTML = manager.artists.generarHTLMSongs();
 }
@@ -278,6 +287,10 @@ function AgregarPlaylistHome(name,artist){
 function cargaInicialPlaylist(){
     document.getElementById("homeMusicalNormal").style.display ="none";
     document.getElementById("musicMatrixNormal").style.display ="none";
+    document.getElementById("friendsNormal").style.display = "none";
+    document.getElementById("bloquedUsers").style.display = "none";
+    document.getElementById("artistListI").style.display = "none"
+    document.getElementById("podcastView").style.display = "none"
     document.getElementById("playlistView").style.display = "block";
     let pInicial = manager.playList.rootNode;
     manager.actualPlaylist = pInicial;
@@ -328,4 +341,117 @@ function graphPlayList(id){
     .width(700)
     .height(500)
     .renderDot(manager.playList.generateGraphviz(id)); 
+}
+function friendsCarga(){
+    document.getElementById("homeMusicalNormal").style.display ="none";
+    document.getElementById("musicMatrixNormal").style.display ="none";
+    document.getElementById("playlistView").style.display = "none";
+    document.getElementById("bloquedUsers").style.display = "none";
+    document.getElementById("podcastView").style.display = "none"
+    document.getElementById("artistListI").style.display = "none"
+    document.getElementById("friendsNormal").style.display = "block";
+    let divMen = document.getElementById("mensajes1");
+    let divMen1 = document.getElementById("mensajes2");
+    divMen.innerHTML = manager.users.returnHTMLBTN();
+    divMen1.innerHTML = manager.friends.generateHTMl();
+}
+
+function addFriend(username, dpi){
+    manager.friends.addFriend(dpi,username);
+    addGrapStack()
+    friendsCarga();
+}
+function addBloqued(username, dpi){
+    manager.bloqueds.addBloqued(dpi,username);
+    addGrapStack()
+    alert("Agregado Correctamente");
+}
+function deleteFriend(){
+    manager.friends.deletFriend();
+    addGrapStack()
+    friendsCarga();
+}
+function addGrapStack(){
+    d3.select('#graphFriend').graphviz()
+    .width(700)
+    .height(250)
+    .renderDot(manager.friends.generateGrapvizStack());
+}
+
+function inicialBloqued(){
+    document.getElementById("homeMusicalNormal").style.display ="none";
+    document.getElementById("musicMatrixNormal").style.display ="none";
+    document.getElementById("friendsNormal").style.display = "none";
+    document.getElementById("playlistView").style.display = "none";
+    document.getElementById("podcastView").style.display = "none"
+    document.getElementById("artistListI").style.display = "none"
+    document.getElementById("bloquedUsers").style.display = "block";
+
+    let divBloqueds = document.getElementById("mensajes3");
+
+    divBloqueds.innerHTML = manager.bloqueds.generateHTML();
+    addGrapQueue();
+}
+function deletBloquedUs(){
+    manager.bloqueds.deleteBloqued();
+    inicialBloqued();
+}
+function addGrapQueue(){
+    d3.select('#graphBloqueds').graphviz()
+    .width(700)
+    .height(250)
+    .renderDot(manager.bloqueds.generateGraph());
+}
+function cargarPodcastIni(){
+    document.getElementById("homeMusicalNormal").style.display ="none";
+    document.getElementById("musicMatrixNormal").style.display ="none";
+    document.getElementById("friendsNormal").style.display = "none";
+    document.getElementById("playlistView").style.display = "none";
+    document.getElementById("bloquedUsers").style.display = "none";
+    document.getElementById("artistListI").style.display = "none"
+    document.getElementById("podcastView").style.display = "block"
+    let divPod = document.getElementById("mensajes4");
+    divPod.innerHTML = manager.binaryTree.generateHTMl();
+    addGraphPod()
+
+}
+function addGraphPod(){
+    d3.select('#grapTreeG').graphviz()
+    .width(800)
+    .height(250)
+    .renderDot(manager.binaryTree.graphTree());
+}
+function publicaPodP(){
+    let namePodP = document.getElementById("NamePodP").value;
+    let temaPodP = document.getElementById("temaPodP").value;
+    let InvitadosPodP = document.getElementById("InvitadosPodP").value;
+    let duracionPodP = document.getElementById("duracionPodP").value;
+
+    InvitadosPodP = InvitadosPodP.split(",");
+    manager.binaryTree.insert(namePodP,temaPodP,InvitadosPodP,duracionPodP);
+    cargarPodcastIni()
+    alert("insertado")
+}
+
+function cargaInicialArtistas(){
+    document.getElementById("homeMusicalNormal").style.display ="none";
+    document.getElementById("musicMatrixNormal").style.display ="none";
+    document.getElementById("friendsNormal").style.display = "none";
+    document.getElementById("playlistView").style.display = "none";
+    document.getElementById("podcastView").style.display = "none"
+    document.getElementById("bloquedUsers").style.display = "none";
+    document.getElementById("artistListI").style.display = "block"
+    let divArtN = document.getElementById("tableArtist")
+    divArtN.innerHTML = manager.artists.generTableHTML();
+    cargaGrapArtistNormal();
+}
+function cargaGrapArtistNormal(){
+    d3.select('#normalGArtist').graphviz()
+    .width(500)
+    .height(300)
+    .renderDot(manager.artists.graphArtist());
+}
+function salirNormal(){
+    document.getElementById("userNormalDashboard").style.display ="none";
+    document.getElementById("loginDiv").style.display = "block";
 }

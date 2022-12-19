@@ -105,6 +105,32 @@ class ArtistsList{
         }
         return cadena;
     }
+    generTableHTML(){
+        let cadena = ""
+        let tmp = this.rootNode
+        for (let x = 0; x < this.size; x++) {
+            cadena += `
+                <tr>
+                    <td>
+                        <div class="card" id="mensajes1" style="width: 18rem; margin: 1rem;">
+                            <div class="card-body">
+                                <h5 class="card-title">Cancion</h5>
+                                <h5 class="card-title">Nombre: ${tmp.name}</h5>
+                                <h5 class="card-title">Nombre: ${tmp.country}</h5>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+            `
+            cadena += tmp.songsList.getSongHTML()
+            cadena += `
+                    </td>
+                </tr>
+            ` 
+            tmp = tmp.nextNode
+        }
+        return cadena;
+    }
     showList(){
         let tmp = this.rootNode
         for (let index = 0; index < this.size; index++) {
